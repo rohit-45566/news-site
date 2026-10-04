@@ -1,137 +1,105 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 import './Home.css';
+
+import HeroCarousel from '../components/HeroCarousel';
+import NewsPage from '../components/NewsPage';
 import Sidebar from '../components/Sidebar';
 
-// 🔮 Future backend URL (later replace)
-const API_URL = "";
-
 const Home = () => {
-  const scrollRef = useRef(null);
-
-  // 🔹 Data handled via JS (not hardcoded JSX)
-  const [recentProblems, setRecentProblems] = useState([
+  const staticNews = [
     {
-      title: "Garbage Overflow",
-      location: "Main Road Area",
-      status: "pending"
+      title: "India Announces Major Technology Initiative",
+      category: "Technology",
+      description:
+        "The government has announced a new technology initiative focused on digital innovation, startups and opportunities for young developers."
     },
     {
-      title: "Street Light Not Working",
-      location: "Shivaji Nagar",
-      status: "solved"
+      title: "India's Cricket Team Begins New Tournament",
+      category: "Sports",
+      description:
+        "The Indian cricket team has started preparations for an important upcoming tournament with players focusing on performance and fitness."
     },
     {
-      title: "Water Leakage",
-      location: "Market Area",
-      status: "pending"
+      title: "New Space Mission Enters Final Testing",
+      category: "Science",
+      description:
+        "Scientists and engineers are completing the final testing phase of a new space mission designed to improve research and scientific understanding."
+    },
+    {
+      title: "Digital Education Expands Across India",
+      category: "Education",
+      description:
+        "Digital learning platforms are becoming increasingly popular among students, providing easier access to courses, study material and learning resources."
     }
-  ]);
-
-  // 🔁 Auto scroll logic (same as your code)
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    let scrollAmount = 0;
-    let isPaused = false;
-
-    const scrollInterval = setInterval(() => {
-      if (!isPaused && scrollContainer) {
-        scrollAmount += 1;
-        if (
-          scrollAmount >=
-          scrollContainer.scrollHeight - scrollContainer.clientHeight
-        ) {
-          scrollAmount = 0;
-        }
-        scrollContainer.scrollTop = scrollAmount;
-      }
-    }, 35);
-
-    const handleMouseEnter = () => (isPaused = true);
-    const handleMouseLeave = () => (isPaused = false);
-
-    if (scrollContainer) {
-      scrollContainer.addEventListener('mouseenter', handleMouseEnter);
-      scrollContainer.addEventListener('mouseleave', handleMouseLeave);
-    }
-
-    return () => {
-      clearInterval(scrollInterval);
-      if (scrollContainer) {
-        scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
-        scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
-      }
-    };
-  }, []);
-
-  // 🔮 Future backend fetch (no HTML/CSS change later)
-  /*
-  useEffect(() => {
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(data => setRecentProblems(data));
-  }, []);
-  */
+  ];
 
   return (
     <div className="home-wrapper">
 
       {/* MAIN CONTENT */}
-      <div className="main-content-scrolll" ref={scrollRef}>
+      <div className="main-content-scrolll">
 
-        {/* HERO SECTION */}
-        <section className="hero-section">
-          <h1>Local Problem Reporting & Solution</h1>
-          <p>
-            Report problems like Road, Water, Garbage & Street Light issues
-            and help authorities take quick action.
+        {/* HERO CAROUSEL */}
+        <section className="mb-4">
+          <HeroCarousel />
+        </section>
+
+        {/* WELCOME */}
+        <section
+          className="p-4 mb-4 rounded-4"
+          style={{
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}
+        >
+          <h1 className="text-white fw-bold">
+            Welcome to Our News Portal 📰
+          </h1>
+
+          <p className="text-light mb-0">
+            Get the latest updates, breaking news and important
+            stories from around the world.
           </p>
-
-          <div className="hero-buttons">
-            <button onClick={() => window.location.href = '/report'}>
-              📢 Report Problem
-            </button>
-            <button
-              className="outline"
-              onClick={() => window.location.href = '/problems'}
-            >
-              👀 View Problems
-            </button>
-          </div>
         </section>
 
-        {/* HOW IT WORKS */}
-        <section className="how-section">
-          <h2>How It Works</h2>
+        {/* STATIC NEWS */}
+        <section className="mb-5">
 
-          <div className="steps">
-            {[
-              { icon: "📝", title: "Report", desc: "User submits local problem details" },
-              { icon: "📍", title: "Track", desc: "Problem is visible with location" },
-              { icon: "✅", title: "Resolve", desc: "Authority updates status after solution" }
-            ].map((step, index) => (
-              <div className="card" key={index}>
-                <h3>{step.icon} {step.title}</h3>
-                <p>{step.desc}</p>
+          <h2 className="text-white mb-4">
+            Latest News
+          </h2>
+
+          <div className="news-feed">
+
+            {staticNews.map((news, index) => (
+              <div className="news-row" key={index}>
+
+                <div className="news-content">
+
+                  <h4 className="news-title text-white">
+                    {news.title}
+                  </h4>
+
+                  <p className="news-meta">
+                    {news.category} | Latest Update
+                  </p>
+
+                  <p className="news-snippet text-light">
+                    {news.description}
+                  </p>
+
+                </div>
+
               </div>
             ))}
+
           </div>
+
         </section>
 
-        {/* RECENT PROBLEMS */}
-        <section className="recent-section">
-          <h2>Recent Reported Problems</h2>
-
-          <div className="problem-list">
-            {recentProblems.map((problem, index) => (
-              <div className="problem-card" key={index}>
-                <h4>{problem.title}</h4>
-                <p>📍 {problem.location}</p>
-                <span className={`status ${problem.status}`}>
-                  {problem.status}
-                </span>
-              </div>
-            ))}
-          </div>
+        {/* LIVE NEWS FROM BACKEND */}
+        <section>
+          <NewsPage />
         </section>
 
       </div>
@@ -144,4 +112,5 @@ const Home = () => {
     </div>
   );
 };
+
 export default Home;
